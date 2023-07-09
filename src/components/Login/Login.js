@@ -45,9 +45,9 @@ export default function Login(props) {
 
     const login = async (userCredential) => {
         await dispatch(signInUser(userCredential))
-        if(state.auth.data!=null){
-            console.log('y');
-        }
+
+        navigate('/home');
+
     }
 
     const signUp = (userDetails) => {
@@ -108,7 +108,7 @@ export default function Login(props) {
                 {((mode === 'Sign Up') ? <>
                     <Button onClick={() => signUp(userDetails)}>Sign Up</Button>
                 </> : <>
-                    <Button onClick={() =>login(userCredential) }>Login</Button>
+                    <Button onClick={() => login(userCredential)}>Login</Button>
                 </>)}
 
             </Modal.Footer>
