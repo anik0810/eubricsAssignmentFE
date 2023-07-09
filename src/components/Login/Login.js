@@ -43,11 +43,10 @@ export default function Login(props) {
     }
 
 
-    const login = (userCredential) => {
-        dispatch(signInUser(userCredential))
-        if (!state.auth.hasError && !state.auth.isLoading) {
+    const login = async (userCredential) => {
+        await dispatch(signInUser(userCredential))
+        if(state.auth.data!=null){
             console.log('y');
-            navigate("/home");
         }
     }
 
