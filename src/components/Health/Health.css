@@ -1,0 +1,8 @@
+.health{
+    text-align: center;
+}
+.add{
+    position: fixed;
+    z-index: 1;
+    bottom: 10%;
+}

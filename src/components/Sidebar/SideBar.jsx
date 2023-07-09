@@ -1,94 +1,51 @@
-import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FaArrowAltCircleRight, FaArrowRight, FaBars, FaBook, FaCode, FaHeart, FaHome, FaLock, FaMoneyBill, FaPowerOff, FaUser } from "react-icons/fa";
+import { MdMessage, MdSports } from "react-icons/md";
 import { BiAnalyse, BiSearch } from "react-icons/bi";
-import { BiCog } from "react-icons/bi";
-import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
-import { BsCartCheck } from "react-icons/bs";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
+import Navbar from "../Navbar/Navbar";
 const routes = [
   {
+    path: "/health",
+    name: "Health",
+    icon: <FaHeart />,
+  },
+  {
+    path: "/study",
+    name: "Study",
+    icon: <FaBook />,
+  },
+  {
+    path: "/coding",
+    name: "Programming",
+    icon: <FaCode />,
+  },
+  {
+    path: "/sports",
+    name: "Sports",
+    icon: <MdSports />,
+  },
+  {
     path: "/",
-    name: "Dashboard",
-    icon: <FaHome />,
-  },
-  {
-    path: "/users",
-    name: "Users",
-    icon: <FaUser />,
-  },
-  {
-    path: "/messages",
-    name: "Messages",
-    icon: <MdMessage />,
-  },
-  {
-    path: "/analytics",
-    name: "Analytics",
-    icon: <BiAnalyse />,
-  },
-  {
-    path: "/file-manager",
-    name: "File Manager",
-    icon: <AiTwotoneFileExclamation />,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
-  {
-    path: "/order",
-    name: "Order",
-    icon: <BsCartCheck />,
-  },
-  {
-    path: "/settings",
-    name: "Settings",
-    icon: <BiCog />,
-    exact: true,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
-  {
-    path: "/saved",
-    name: "Saved",
-    icon: <AiFillHeart />,
+    name: "Logout",
+    icon: <FaPowerOff />,
   },
 ];
 
 const SideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    console.log('logout');
+    localStorage.clear();
+    navigate(['/'])
+  }
+
   const inputAnimation = {
     hidden: {
       width: 0,
@@ -157,23 +114,7 @@ const SideBar = ({ children }) => {
               <FaBars onClick={toggle} />
             </div>
           </div>
-          <div className="search">
-            <div className="search_icon">
-              <BiSearch />
-            </div>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.input
-                  initial="hidden"
-                  animate="show"
-                  exit="hidden"
-                  variants={inputAnimation}
-                  type="text"
-                  placeholder="Search"
-                />
-              )}
-            </AnimatePresence>
-          </div>
+
           <section className="routes">
             {routes.map((route, index) => {
               if (route.subRoutes) {
@@ -187,34 +128,64 @@ const SideBar = ({ children }) => {
                 );
               }
 
-              return (
-                <NavLink
-                  to={route.path}
-                  key={index}
-                  className="link"
-                  activeClassName="active"
-                >
-                  <div className="icon">{route.icon}</div>
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.div
-                        variants={showAnimation}
-                        initial="hidden"
-                        animate="show"
-                        exit="hidden"
-                        className="link_text"
-                      >
-                        {route.name}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </NavLink>
-              );
+              if (index != 4) {
+                return (
+                  <NavLink
+                    to={'/home' + route.path}
+                    key={index}
+                    className="link"
+                    activeClassName="active"
+                  >
+                    <div className="icon">{route.icon}</div>
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className="link_text"
+                        >
+                          {route.name}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </NavLink>
+                );
+              }
+              else{
+                return (
+                  <NavLink
+                    key={index}
+                    className="link"
+                    onClick={()=>{logOut()}}
+                    activeClassName="active"
+                  >
+                    <div className="icon">{route.icon}</div>
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className="link_text"
+                        >
+                          {route.name}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </NavLink>
+                );
+              }
             })}
           </section>
         </motion.div>
 
-        <main>{children}</main>
+        <main className="w-100">
+          <Navbar />
+          <Outlet />
+        </main>
       </div>
     </>
   );
